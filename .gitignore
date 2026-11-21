@@ -1,0 +1,21 @@
+# 리뷰 본문·라벨·모델은 저장소에 올리지 않는다.
+.venv/
+__pycache__/
+*.pyc
+.env
+*.env
+models/
+pool/
+packet/
+llm/
+verify/
+team-pilot/
+survey/
+shadow/
+split*/
+labels*.csv
+*.xlsx
+*.csv
+*.json
+*.log
+*.tgz

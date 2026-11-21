@@ -1,0 +1,2 @@
+set statement_timeout='600s';
+\copy (with s as (select platform, raw_payload from reviews tablesample system(3) where raw_payload is not null and jsonb_typeof(raw_payload)='object'), t as (select platform, count(*) n from s group by 1) select s.platform, k, round(count(*)*100.0/max(t.n),1) pct from s join t using(platform), jsonb_object_keys(s.raw_payload) k group by 1,2 order by 1,3 desc) to stdout with csv header
