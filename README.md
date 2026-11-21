@@ -27,6 +27,9 @@ src/review_model/
   training/score.py           일괄 채점 (오프라인 그림자 운영)
   policy/rules.py             등급 규칙 후보 (A 텍스트 중심, B 증거 보정, C 학습된 결합)
   policy/compare.py           후보와 v3.1을 같은 라벨·운영 표본으로 비교
+  policy/config.py            채택 규칙 설정(policy.json) 내보내기·읽기
+  serving/predictor.py        운영 추론: 확률 → 텍스트 점수·정책 지수·등급
+  serving/app.py              HTTP 서비스 (POST /v4/analyze, GET /health)
 tests/                        단위 테스트 (torch 없이 실행)
 ```
 
@@ -56,6 +59,23 @@ uv pip install -e ".[train]" \
 | 11. 등급 규칙 비교 | `python -m review_model.policy.compare --val ... --test ... --out policy_compare.json` (`--help` 참고) |
 
 모든 명령은 `--help`로 인자를 확인할 수 있다.
+
+## 운영 추론 (등급 규칙 A: 텍스트 중심)
+
+```bash
+python -m review_model.policy.config policy_compare.json models/ptext-koelectra-v4.0/policy.json
+uv pip install -e ".[train,serve]"
+REVIEW_MODEL_DIR=models/ptext-koelectra-v4.0 REVIEW_MODEL_TOKEN=... \\
+  uvicorn review_model.serving.app:app --host 127.0.0.1 --port 8100
+```
+
+- `POST /v4/analyze`
+  - 헤더 `X-Internal-Token`이 필요하다.
+  - 본문 `{platform, product_id, reviews: [{review_id, content}]}`, 최대 500건
+  - 응답은 리뷰별 `text_probability`, `text_score`, `policy_index`, `level`이다.
+- 등급은 의심 확률이 `warn_cut` 이상이면 WARN, `danger_cut` 이상이면 DANGER다.
+- 경계값은 검증 세트에서 정밀도 0.5·0.8 기준으로 정했다.
+- 사진 유무는 등급에 쓰지 않는다.
 
 ## 라벨 기준
 
