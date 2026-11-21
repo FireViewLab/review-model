@@ -25,6 +25,8 @@ src/review_model/
   training/train.py           파인튜닝 + temperature 보정 + 임계값
   training/evaluate.py        시험 세트·프로브 평가, v3.1 비교
   training/score.py           일괄 채점 (오프라인 그림자 운영)
+  policy/rules.py             등급 규칙 후보 (A 텍스트 중심, B 증거 보정, C 학습된 결합)
+  policy/compare.py           후보와 v3.1을 같은 라벨·운영 표본으로 비교
 tests/                        단위 테스트 (torch 없이 실행)
 ```
 
@@ -51,6 +53,7 @@ uv pip install -e ".[train]" \
 | 8. 학습 | `python -m review_model.training.train split models/ptext-koelectra-v4.0` |
 | 9. 평가 | `python -m review_model.training.evaluate models/ptext-koelectra-v4.0 split/test.csv eval.json --baseline <v3.1>` |
 | 10. 채점 | `python -m review_model.training.score models/ptext-koelectra-v4.0 sample.csv scores.csv` |
+| 11. 등급 규칙 비교 | `python -m review_model.policy.compare --val ... --test ... --out policy_compare.json` (`--help` 참고) |
 
 모든 명령은 `--help`로 인자를 확인할 수 있다.
 
