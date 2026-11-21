@@ -1,0 +1,42 @@
+[project]
+name = "review-model"
+version = "4.0.0"
+description = "Re:view 리뷰 신뢰도 텍스트 모델(v4.0) 데이터 준비·라벨링·학습·평가"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "openpyxl>=3.1",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+# 학습·평가·채점(GPU). torch는 CUDA 빌드를 따로 설치한다: --index-url https://download.pytorch.org/whl/cu128
+train = [
+    "torch==2.8.0",
+    "transformers==4.57.6",
+    "safetensors",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/review_model"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# 줄 길이는 포매터가 맞춘다. 남는 긴 줄은 한국어 기준 문구다.
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
