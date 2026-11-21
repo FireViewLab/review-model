@@ -79,6 +79,8 @@ REVIEW_MODEL_DIR=models/ptext-koelectra-v4.0 REVIEW_MODEL_TOKEN=... \\
 
 ## 라벨 기준
 
+기준과 절차 요약은 [docs/labeling_guide.md](docs/labeling_guide.md)에 있다.
+
 | 라벨 | 뜻 | 학습 |
 |---|---|---|
 | NORMAL | 정의된 의심 신호가 없음 | 0 |
